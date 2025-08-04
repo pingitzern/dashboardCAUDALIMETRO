@@ -1,70 +1,27 @@
-# dashboardCAUDALIMETRO
+# 💧 Dashboard de Análisis de Producción para Equipos de Ósmosis Inversa
 
-Este proyecto es un dashboard interactivo construido con Streamlit para analizar los datos de producción de un equipo de ósmosis inversa. La aplicación permite a los usuarios subir un archivo de datos (CSV o Excel) y genera un reporte detallado de los ciclos de producción y el volumen total de agua producida en un período seleccionado.
+Esta es una aplicación web interactiva creada con Streamlit para analizar y visualizar los datos de producción de un equipo de ósmosis inversa a partir de los registros de un caudalímetro.
 
-## 📜 Descripción
+## 🚀 Características Principales
 
-La herramienta está diseñada para procesar datos crudos de caudalímetros, identificar automáticamente los ciclos de operación y presentar un resumen claro y fácil de entender, tanto a nivel diario como para un período completo.
+- **Carga de Datos Flexible**: Soporta la carga de archivos en formato `.csv` y `.xlsx`.
+- **Reportes por Rango de Fechas**: Permite al usuario seleccionar un período específico para el análisis.
+- **Detección Automática de Ciclos**: Identifica de forma inteligente los ciclos de producción, considerando como una pausa cualquier interrupción mayor a 10 minutos.
+- **Cálculo de Volumen**: Calcula con precisión el volumen de agua producido en cada ciclo, el total diario y el total para el período seleccionado.
+- **Visualización Interactiva**: Muestra los resultados en un reporte claro y fácil de entender, además de un gráfico de barras que resume la producción diaria.
 
-## ✨ Características Principales
+## 🛠️ Cómo Utilizar la Aplicación
 
-- **Carga de datos flexible**: Soporta archivos en formato `.csv` y `.xlsx`.
-- **Análisis de ciclos de producción**: Detecta automáticamente los ciclos de trabajo basándose en interrupciones de tiempo (10 minutos o más).
-- **Cálculo de volumen**: Calcula el volumen de agua producida en cada ciclo y el total acumulado.
-- **Reportes detallados**: Muestra un desglose de los ciclos por día, con horas de inicio/fin y el volumen de cada uno.
-- **Visualización gráfica**: Incluye un gráfico de barras que resume la producción total por día.
-- **Interfaz interactiva**: Permite al usuario seleccionar el rango de fechas para el análisis.
-
-## ⚙️ Lógica de Análisis
-
-El script aplica la siguiente lógica de negocio:
-1.  **Detección de Ciclos**: Un ciclo de producción se considera nuevo si hay un intervalo de **más de 10 minutos** desde el último registro de datos.
-2.  **Umbral de Producción**: La producción real se contabiliza solo cuando el caudal (`L/MIN`) es de **1.0 o superior**. Los registros con un caudal inferior se ignoran para el cálculo de volumen.
-
-## 📊 Formato de Datos de Entrada
-
-Para que el análisis funcione correctamente, el archivo subido debe contener al menos las siguientes dos columnas:
-
-- `fecha_hora`: La fecha y hora de la medición.
-- `L/MIN`: El caudal medido en litros por minuto. (También se acepta el nombre de columna `flowRate`).
-
-## 🚀 Instalación y Uso
-
-Para ejecutar este dashboard en tu máquina local, sigue estos pasos:
-
-1.  **Clona este repositorio:**
-    ```bash
-    git clone <URL-DEL-REPOSITORIO>
-    cd dashboardCAUDALIMETRO
-    ```
-
-2.  **Crea y activa un entorno virtual (recomendado):**
-    ```bash
-    # Para Windows
-    python -m venv venv
-    venv\Scripts\activate
-
-    # Para macOS/Linux
-    python3 -m venv venv
-    source venv/bin/activate
-    ```
-
-3.  **Instala las dependencias:**
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-4.  **Ejecuta la aplicación Streamlit:**
+1.  **Ejecutar la Aplicación**: Para iniciar el dashboard, ejecuta el siguiente comando en tu terminal:
     ```bash
     streamlit run analisis_osmosis.py
     ```
+2.  **Subir el Archivo**: Haz clic en el botón "Elige tu archivo de datos" y selecciona el archivo Excel o CSV que contiene los registros del caudalímetro. El archivo debe tener obligatoriamente dos columnas:
+    - `fecha_hora`: La fecha y hora de la medición.
+    - `L/MIN`: El caudal medido en litros por minuto.
+3.  **Seleccionar Fechas**: En la barra lateral, elige la fecha de inicio y fin para el período que deseas analizar.
+4.  **Generar Reporte**: Haz clic en el botón "Generar Reporte". La aplicación procesará los datos y mostrará un resumen detallado de la producción.
 
-5.  Abre tu navegador y ve a la dirección URL que se muestra en la terminal.
+## ⚙️ Lógica de Negocio
 
-## 🛠️ Tecnologías Utilizadas
-
-- Python
-- Streamlit
-- Pandas
-- Numpy
-- Openpyxl
+El núcleo del análisis es la detección de ciclos. La aplicación considera que un nuevo ciclo de producción comienza cuando detecta una pausa en el registro de datos superior a **10 minutos**. Además, para que un registro sea considerado como "producción real", el caudal (`flowRate`) debe ser de al menos **1.0 L/min**. Los registros por debajo de este umbral son ignorados para el cálculo del volumen.
