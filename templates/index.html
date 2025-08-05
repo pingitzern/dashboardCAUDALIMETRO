@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis de Ósmosis</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 2em;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .error {
+            color: red;
+        }
+        .report-day {
+            margin-bottom: 1.5em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💧 Reporte Interactivo de Producción de Ósmosis</h1>
+        <p>Sube tu archivo de Excel o CSV para analizar los ciclos de producción de tu equipo.</p>
+
+        {% if error %}
+            <p class="error">Error: {{ error }}</p>
+        {% endif %}
+
+        <form method="post" enctype="multipart/form-data">
+            <div>
+                <label for="file">Elige tu archivo de datos (Excel o CSV):</label>
+                <input type="file" name="file" id="file" accept=".csv, .xlsx">
+            </div>
+
+            {% if min_date and max_date %}
+                <div>
+                    <label for="fecha_inicio">Fecha de Inicio:</label>
+                    <input type="date" id="fecha_inicio" name="fecha_inicio" value="{{ fecha_inicio or min_date }}" min="{{ min_date }}" max="{{ max_date }}">
+                </div>
+                <div>
+                    <label for="fecha_fin">Fecha de Fin:</label>
+                    <input type="date" id="fecha_fin" name="fecha_fin" value="{{ fecha_fin or max_date }}" min="{{ min_date }}" max="{{ max_date }}">
+                </div>
+            {% endif %}
+
+            <button type="submit">Generar Reporte</button>
+        </form>
+
+        {% if reporte_diario %}
+            <h2>Reporte</h2>
+            {% for day, data in reporte_diario.items() %}
+                <div class="report-day">
+                    <h3>🗓️ {{ day }}</h3>
+                    <ul>
+                        {% for cycle in data.cycles %}
+                            <li>
+                                <strong>Ciclo:</strong> de <code>{{ cycle.start_time.strftime('%H:%M:%S') }}</code> a <code>{{ cycle.end_time.strftime('%H:%M:%S') }}</code> -> <strong>{{ "%.2f"|format(cycle.cycle_volume) }} litros</strong>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <p><strong>TOTAL DEL DÍA: {{ "%.2f"|format(data.total_volume) }} litros</strong></p>
+                </div>
+            {% endfor %}
+
+            <h2>Resumen del Período</h2>
+            <p><strong>VOLUMEN TOTAL PRODUCIDO: {{ "%.2f"|format(volumen_total) }} litros</strong></p>
+        {% endif %}
+    </div>
+</body>
+</html>
